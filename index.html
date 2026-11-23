@@ -318,7 +318,10 @@ function viewPlan(){
   h+=`<details${w===cw?' open':''}><summary><span>Wk ${w} · ${shortD(weekMon(w))} <span class="pill${w===cw?' a':''}" style="margin-left:6px">${esc(x.focus)}</span></span><span class="small muted">${x.km} km · ${x.cl} m</span></summary>`;
   rs.forEach(r=>{const done=runs.find(q=>q.date===r.d);h+=`<div class="item" style="padding:6px 0"><div style="min-width:0"><div class="small"><b>${r.day}</b> ${esc(r.t)}</div></div><div class="small muted" style="white-space:nowrap">${done?'✓ '+done.km.toFixed(1)+' km':r.km+' km · '+r.cl+' m'}</div></div>`});
   h+='</details>'});
- $('#view').innerHTML=h+'</div>'}
+ let lb='';try{lb=localStorage.getItem('et_bk')||''}catch(_){}
+ h+='</div>';
+ h+=`<div class="card"><h2>Backup</h2><div class="small muted">Saves your runs, gym sessions and settings to a file in your downloads. Restore it here or on a new phone.${lb?' Last backup: '+esc(nice(lb))+'.':' No backup made yet.'}</div><div style="margin:10px 0"><button class="sm" id="bk-save">Save backup file</button></div><label for="bk-file">Restore from a backup file</label><input id="bk-file" type="file" accept=".json,application/json"><div id="bk-msg" class="small muted" style="margin-top:8px"></div></div>`;
+ $('#view').innerHTML=h}
 
 /* ---------- router ---------- */
 const TABS=['week','log','charts','plan'];
@@ -344,10 +347,21 @@ document.addEventListener('click',async e=>{
   el.dataset.arm=el.dataset.del;el.textContent='Tap again to delete';el.classList.remove('ghost');el.classList.add('bad');
   setTimeout(()=>{if(el.isConnected){delete el.dataset.arm;el.textContent='Delete';el.classList.add('ghost');el.classList.remove('bad')}},3000);return}
  if(el=q('[data-rt]')){const [d,i]=el.dataset.rt.split('|');const rr={...(state.routes||{})};if(i==='x')delete rr[d];else rr[d]=ROUTELIB[+i].n;state={...state,routes:rr};render();await save('state','settings',{tired:state.tired||{},routes:rr});return}
+ if(q('#bk-save')){const data=JSON.stringify({app:'eryri-trainer',v:1,saved:new Date().toISOString(),runs,gym,state});const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([data],{type:'application/json'}));a.download='eryri-backup-'+today()+'.json';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);try{localStorage.setItem('et_bk',today())}catch(_){}toast('Backup saved to your downloads');return}
  if(q('#strongfill'))return strongFill();
  if(q('#fitimport'))return importFiles();
  if(q('#save'))return doSave();
 });
+document.addEventListener('change',async e=>{
+ if(e.target.id!=='bk-file'||!e.target.files[0])return;const msg=$('#bk-msg');
+ try{const d=JSON.parse(await e.target.files[0].text());if(d.app!=='eryri-trainer'||!Array.isArray(d.runs)||!Array.isArray(d.gym))throw 0;
+  let nr=0,ng=0;
+  for(const r of d.runs){if(r&&r.id&&r.date&&!runs.some(x=>x.id===r.id)){const {id,...rec}=r;runs=[...runs,r];await save('runs',id,rec);nr++}}
+  for(const g of d.gym){if(g&&g.id&&g.date&&!gym.some(x=>x.id===g.id)){const {id,...rec}=g;gym=[...gym,g];await save('gym',id,rec);ng++}}
+  if(d.state&&typeof d.state==='object'){const st={tired:{...(d.state.tired||{}),...(state.tired||{})},routes:{...(d.state.routes||{}),...(state.routes||{})}};state={...state,...st};await save('state','settings',st)}
+  render();const m2=$('#bk-msg');if(m2)m2.textContent=`Restored ${nr} run${nr===1?'':'s'} and ${ng} workout${ng===1?'':'s'}. Anything already here was kept.`}
+ catch(_){msg.textContent='That does not look like an Eryri Trainer backup file.'}
+ e.target.value=''});
 document.addEventListener('input',e=>{if(e.target.id==='g-rpe')$('#rpev').textContent=e.target.value});
 
 function parseFit(buf){
