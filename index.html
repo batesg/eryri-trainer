@@ -1,0 +1,458 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><link rel="manifest" href="manifest.json"><meta name="theme-color" content="#101614"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><style>:root{color-scheme:light}body{margin:0}[hidden]{display:none!important}</style><title>Eryri Trainer</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap">
+<style>
+:root{--bg:#f3f2ec;--surf:#fff;--surf2:#ebe9e0;--ink:#1c2321;--mute:#5d6762;--line:#dcd9cd;--accent:#b8501a;--accent-ink:#fff;--green:#2f6b4f;--green-soft:#d5e6dc;--warn:#9a6a00;--warn-soft:#f6e8c3;--bad:#a63a2b;--plan:#8a948f;
+--fh:'Space Grotesk',system-ui,sans-serif;--fb:'Inter',system-ui,sans-serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#101614;--surf:#18201d;--surf2:#222c28;--ink:#e8ebe7;--mute:#9aa6a0;--line:#2e3a35;--accent:#e68a52;--accent-ink:#1a1008;--green:#6fbf98;--green-soft:#1f3a2e;--warn:#e3b64d;--warn-soft:#3a3016;--bad:#e8806f;--plan:#7d8a84;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#101614;--surf:#18201d;--surf2:#222c28;--ink:#e8ebe7;--mute:#9aa6a0;--line:#2e3a35;--accent:#e68a52;--accent-ink:#1a1008;--green:#6fbf98;--green-soft:#1f3a2e;--warn:#e3b64d;--warn-soft:#3a3016;--bad:#e8806f;--plan:#7d8a84;color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--fb);font-size:15px;line-height:1.45;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:12px 96px}
+*{box-sizing:border-box}
+h1,h2,h3{font-family:var(--fh);margin:0;text-wrap:balance}
+.wrap{max-width:560px;margin:0 auto}
+header{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin-bottom:14px}
+header h1{font-size:22px;letter-spacing:-.01em}
+.cd{font-family:var(--fh);text-align:right;font-size:12px;color:var(--mute);text-transform:uppercase;letter-spacing:.06em}
+.cd b{display:block;font-size:22px;color:var(--accent);letter-spacing:0}
+.card{background:var(--surf);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px;min-width:0}
+.card h2{font-size:15px;margin-bottom:8px}
+.lbl{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--mute);font-weight:600}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.sp{justify-content:space-between}
+.muted{color:var(--mute)}
+.small{font-size:13px}
+.big{font-family:var(--fh);font-size:26px;font-weight:600;letter-spacing:-.02em;line-height:1.1}
+.meter{height:8px;background:var(--surf2);border-radius:5px;overflow:hidden;margin-top:6px;position:relative}
+.meter i{display:block;height:100%;background:var(--green);border-radius:5px}
+.meter i.over{background:var(--accent)}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.grid3>div{min-width:0}
+.run{border-left:4px solid var(--line)}
+.run.done{border-left-color:var(--green)}
+.run.today{border-left-color:var(--accent)}
+.run.missed{border-left-color:var(--bad)}
+.pill{display:inline-block;font-size:11px;font-weight:600;padding:2px 8px;border-radius:99px;background:var(--surf2);color:var(--mute)}
+.pill.g{background:var(--green-soft);color:var(--green)}
+.pill.w{background:var(--warn-soft);color:var(--warn)}
+.pill.a{background:var(--accent);color:var(--accent-ink)}
+.nums{display:flex;gap:14px;flex-wrap:wrap;margin:6px 0}
+.nums b{font-family:var(--fh);font-size:19px}
+.nums s{color:var(--mute);font-size:13px;margin-right:4px}
+.route{font-size:13px;color:var(--mute);margin:4px 0 0}
+.note{background:var(--warn-soft);border-radius:10px;padding:10px 12px;font-size:13px;margin-bottom:12px}
+.note ul{margin:4px 0 0;padding-left:18px}
+.gymrow{background:var(--surf2);border-radius:10px;padding:8px 12px;margin-bottom:12px;font-size:13px}
+button,.btn{font:inherit;font-weight:600;border:0;border-radius:10px;padding:10px 14px;background:var(--accent);color:var(--accent-ink);cursor:pointer;min-height:44px}
+button.ghost{background:var(--surf2);color:var(--ink)}
+button.sm{min-height:36px;padding:6px 12px;font-size:13px}
+button.bad{background:var(--bad);color:#fff}
+label{display:block;font-size:12px;font-weight:600;color:var(--mute);margin-bottom:4px}
+input,select,textarea{font:inherit;width:100%;min-height:44px;padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);min-width:0}
+input[type=range]{padding:0;accent-color:var(--accent)}
+.f{margin-bottom:12px}
+.f2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.f3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.seg{display:flex;background:var(--surf2);border-radius:12px;padding:3px;margin-bottom:12px}
+.seg button{flex:1;background:transparent;color:var(--mute);min-height:38px}
+.seg button.on{background:var(--surf);color:var(--ink);box-shadow:0 1px 2px #0002}
+nav{position:fixed;left:0;right:0;bottom:0;background:var(--surf);border-top:1px solid var(--line);display:flex;padding:6px max(8px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px));z-index:5}
+nav a{flex:1;text-align:center;text-decoration:none;color:var(--mute);font-size:11px;font-weight:600;padding:6px 0;border-radius:10px}
+nav a svg{display:block;margin:0 auto 2px;width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+nav a.on{color:var(--accent)}
+svg.ch{width:100%;height:auto;display:block}
+svg.ch text{font-family:var(--fb);font-size:9px;fill:var(--mute)}
+.ch .grid{stroke:var(--line);stroke-width:1}
+.ch .bar{fill:var(--green)}
+.ch .bar.cur{fill:var(--accent)}
+.ch .tick{stroke:var(--plan);stroke-width:2}
+.ch .ln{fill:none;stroke:var(--green);stroke-width:2}
+.ch .dot{fill:var(--green);stroke:var(--surf);stroke-width:2}
+.ch .sel{fill:var(--surf2)}
+.item{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.item:last-child{border:0}
+details{border-top:1px solid var(--line);padding:8px 0}
+summary{cursor:pointer;display:flex;justify-content:space-between;gap:8px;font-weight:600;min-height:32px;align-items:center}
+.empty{text-align:center;color:var(--mute);padding:18px 0}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:99px;font-size:13px;z-index:9}
+</style>
+
+</head><body><div class="wrap">
+<header><div><div class="lbl">Eryri 50K · 15 May 2027</div><h1>Eryri Trainer</h1></div><div class="cd"><b id="cd">–</b>days to go</div></div>
+<div id="banner"></div>
+<main id="view"></main>
+</div>
+<nav id="nav">
+<a href="#week" data-t="week"><svg viewBox="0 0 24 24"><path d="M3 20l6-11 4 6 3-4 5 9z"/></svg>Week</a>
+<a href="#log" data-t="log"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Log</a>
+<a href="#charts" data-t="charts"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Charts</a>
+<a href="#plan" data-t="plan"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 11h16"/></svg>Plan</a>
+</nav>
+
+<script>
+window.addEventListener('error',e=>{try{document.getElementById('banner').innerHTML='<div class="note">Something went wrong. <button class="sm" onclick="location.reload()">Reload</button></div>'}catch(_){}});
+function ensureZip(){return new Promise(ok=>{if(typeof JSZip!=='undefined')return ok(true);const sc=document.createElement('script');sc.src='https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';sc.onload=()=>ok(true);sc.onerror=()=>ok(false);document.head.append(sc);setTimeout(()=>ok(typeof JSZip!=='undefined'),8000)})}
+const PLAN = {"plan":[{"w":1,"d":"2026-11-23","day":"Mon","t":"Recovery","route":"Short out-and-back on the Blidworth Woods trails","km":4.5,"cl":35,"note":""},{"w":1,"d":"2026-11-25","day":"Wed","t":"Hill session (6 repeats)","route":"Warm up 10 minutes, then 6 x 3 minutes uphill, steady-hard, on the steepest climb of the Blidworth Blast loop (5.3 km, 70 m, start Blidworth), jogging back down. Cool down 10 minutes.","km":6.5,"cl":180,"note":""},{"w":1,"d":"2026-11-27","day":"Fri","t":"Easy rolling","route":"Fox and Hounds loop (7.6 km, 90 m, start Blidworth); trim or add trail to reach the distance","km":7.0,"cl":145,"note":""},{"w":1,"d":"2026-11-29","day":"Sun","t":"Long run","route":"Thieves Wood and Fountain Dale loop (18 km, 200 m, start Blidworth); shorten or extend to the distance","km":18,"cl":250,"note":""},{"w":2,"d":"2026-11-30","day":"Mon","t":"Recovery","route":"The Inkpot loop (6.3 km, 60 m, start Rainworth)","km":5.0,"cl":40,"note":""},{"w":2,"d":"2026-12-02","day":"Wed","t":"Hill session (6 repeats)","route":"Warm up 10 minutes, then 6 x 3 minutes uphill, steady-hard, on the steepest climb of the Blidworth Blast loop (5.3 km, 70 m, start Blidworth), jogging back down. Cool down 10 minutes.","km":7.0,"cl":190,"note":""},{"w":2,"d":"2026-12-04","day":"Fri","t":"Easy rolling","route":"Fox and Hounds loop (7.6 km, 90 m, start Blidworth); trim or add trail to reach the distance","km":7.0,"cl":150,"note":""},{"w":2,"d":"2026-12-06","day":"Sun","t":"Long run","route":"Thieves Wood and Fountain Dale loop (18 km, 200 m) plus a Fox and Hounds extension. Add extra hill repeats on the Blidworth Blast climb if short of the climb target.","km":20,"cl":300,"note":""},{"w":3,"d":"2026-12-07","day":"Mon","t":"Recovery","route":"The Inkpot loop (6.3 km, 60 m, start Rainworth)","km":5.0,"cl":40,"note":""},{"w":3,"d":"2026-12-09","day":"Wed","t":"Hill session (7 repeats)","route":"Warm up 10 minutes, then 7 x 3 minutes uphill, steady-hard, on the steepest climb of the Blidworth Blast loop (5.3 km, 70 m, start Blidworth), jogging back down. Cool down 10 minutes.","km":7.5,"cl":200,"note":""},{"w":3,"d":"2026-12-11","day":"Fri","t":"Easy rolling","route":"Fox and Hounds loop (7.6 km, 90 m, start Blidworth); trim or add trail to reach the distance","km":7.5,"cl":160,"note":""},{"w":3,"d":"2026-12-13","day":"Sun","t":"Long run","route":"Thieves Wood and Fountain Dale loop (18 km, 200 m) plus a Fox and Hounds extension. Add extra hill repeats on the Blidworth Blast climb if short of the climb target.","km":22,"cl":330,"note":""},{"w":4,"d":"2026-12-14","day":"Mon","t":"Recovery","route":"Short out-and-back on the Blidworth Woods trails","km":4.0,"cl":30,"note":""},{"w":4,"d":"2026-12-16","day":"Wed","t":"Hill session (6 repeats)","route":"Warm up 10 minutes, then 6 x 3 minutes uphill, steady-hard, on the steepest climb of the Blidworth Blast loop (5.3 km, 70 m, start Blidworth), jogging back down. Cool down 10 minutes.","km":6.0,"cl":160,"note":""},{"w":4,"d":"2026-12-18","day":"Fri","t":"Easy rolling","route":"Cafe in the Woods loop, Blidworth Woods (5.3 km, 70 m, start Papplewick Pumping Station)","km":6.0,"cl":130,"note":""},{"w":4,"d":"2026-12-20","day":"Sun","t":"Long run (easy week)","route":"Thieves Wood and Fountain Dale loop (18 km, 200 m, start Blidworth); shorten or extend to the distance","km":16,"cl":200,"note":""},{"w":5,"d":"2026-12-21","day":"Mon","t":"Recovery","route":"The Inkpot loop (6.3 km, 60 m, start Rainworth)","km":5.0,"cl":40,"note":""},{"w":5,"d":"2026-12-23","day":"Wed","t":"Hill session (8 repeats)","route":"Warm up 10 minutes, then 8 x 3 minutes uphill, steady-hard, on the steepest climb of the Blidworth Blast loop (5.3 km, 70 m, start Blidworth), jogging back down. Cool down 10 minutes.","km":7.5,"cl":200,"note":""},{"w":5,"d":"2026-12-25","day":"Fri","t":"Easy rolling","route":"Fox and Hounds loop (7.6 km, 90 m, start Blidworth); trim or add trail to reach the distance","km":7.5,"cl":160,"note":"Christmas Day: move this run if needed"},{"w":5,"d":"2026-12-27","day":"Sun","t":"Long run","route":"Thieves Wood and Fountain Dale loop (18 km, 200 m) plus a Fox and Hounds extension. Add extra hill repeats on the Blidworth Blast climb if short of the climb target.","km":24,"cl":350,"note":""},{"w":6,"d":"2026-12-28","day":"Mon","t":"Recovery","route":"The Inkpot loop (6.3 km, 60 m, start Rainworth)","km":5.0,"cl":40,"note":""},{"w":6,"d":"2026-12-30","day":"Wed","t":"Hill session (8 repeats)","route":"Warm up 10 minutes, then 8 x 3 minutes uphill, steady-hard, on the steepest climb of the Blidworth Blast loop (5.3 km, 70 m, start Blidworth), jogging back down. Cool down 10 minutes.","km":8.0,"cl":210,"note":""},{"w":6,"d":"2027-01-01","day":"Fri","t":"Easy rolling","route":"Fox and Hounds loop (7.6 km, 90 m, start Blidworth); trim or add trail to reach the distance","km":8.0,"cl":170,"note":""},{"w":6,"d":"2027-01-03","day":"Sun","t":"Long run","route":"Peak District: Edale Skyline from Hope station. Turn back, or drop into Edale at Ringing Roger, when you reach 26 km or 450 m of climbing, whichever comes first.","km":26,"cl":450,"note":""},{"w":7,"d":"2027-01-04","day":"Mon","t":"Recovery","route":"The Inkpot loop (6.3 km, 60 m, start Rainworth)","km":5.5,"cl":45,"note":""},{"w":7,"d":"2027-01-06","day":"Wed","t":"Hill session (9 repeats)","route":"Warm up 10 minutes, then 9 x 3 minutes uphill, steady-hard, on the steepest climb of the Blidworth Blast loop (5.3 km, 70 m, start Blidworth), jogging back down. Cool down 10 minutes.","km":8.0,"cl":220,"note":""},{"w":7,"d":"2027-01-08","day":"Fri","t":"Easy rolling","route":"Fox and Hounds loop (7.6 km, 90 m, start Blidworth); trim or add trail to reach the distance","km":8.5,"cl":175,"note":""},{"w":7,"d":"2027-01-10","day":"Sun","t":"Long run","route":"Peak District: Edale Skyline from Hope station. Turn back, or drop into Edale at Ringing Roger, when you reach 28 km or 550 m of climbing, whichever comes first.","km":28,"cl":550,"note":""},{"w":8,"d":"2027-01-11","day":"Mon","t":"Recovery","route":"The Inkpot loop (6.3 km, 60 m, start Rainworth)","km":5.0,"cl":40,"note":""},{"w":8,"d":"2027-01-13","day":"Wed","t":"Hill session (6 repeats)","route":"Warm up 10 minutes, then 6 x 3 minutes uphill, steady-hard, on the steepest climb of the Blidworth Blast loop (5.3 km, 70 m, start Blidworth), jogging back down. Cool down 10 minutes.","km":7.5,"cl":200,"note":""},{"w":8,"d":"2027-01-15","day":"Fri","t":"Easy rolling","route":"Fox and Hounds loop (7.6 km, 90 m, start Blidworth); trim or add trail to reach the distance","km":7.5,"cl":160,"note":""},{"w":8,"d":"2027-01-17","day":"Sun","t":"Long run (easy week)","route":"Thieves Wood and Fountain Dale loop (18 km, 200 m, start Blidworth); shorten or extend to the distance","km":18,"cl":250,"note":""},{"w":9,"d":"2027-01-18","day":"Mon","t":"Recovery","route":"The Inkpot loop (6.3 km, 60 m, start Rainworth)","km":5.5,"cl":45,"note":""},{"w":9,"d":"2027-01-20","day":"Wed","t":"Hill session (10 repeats)","route":"Warm up 10 minutes, then 10 x 3 minutes uphill, steady-hard, on the steepest climb of the Blidworth Blast loop (5.3 km, 70 m, start Blidworth), jogging back down. Cool down 10 minutes.","km":8.0,"cl":220,"note":""},{"w":9,"d":"2027-01-22","day":"Fri","t":"Easy rolling","route":"Fox and Hounds loop (7.6 km, 90 m, start Blidworth); trim or add trail to reach the distance","km":8.5,"cl":175,"note":""},{"w":9,"d":"2027-01-24","day":"Sun","t":"Long run","route":"Peak District: Edale Skyline from Hope station. Turn back, or drop into Edale at Ringing Roger, when you reach 30 km or 700 m of climbing, whichever comes first.","km":30,"cl":700,"note":""},{"w":10,"d":"2027-01-25","day":"Mon","t":"Recovery","route":"The Inkpot loop (6.3 km, 60 m, start Rainworth)","km":6.0,"cl":45,"note":""},{"w":10,"d":"2027-01-27","day":"Wed","t":"Hill session (10 repeats)","route":"Warm up 10 minutes, then 10 x 3 minutes uphill, steady-hard, on the steepest climb of the Blidworth Blast loop (5.3 km, 70 m, start Blidworth), jogging back down. Cool down 10 minutes.","km":8.5,"cl":230,"note":""},{"w":10,"d":"2027-01-29","day":"Fri","t":"Easy rolling","route":"Fox and Hounds loop (7.6 km, 90 m, start Blidworth); trim or add trail to reach the distance","km":8.5,"cl":185,"note":""},{"w":10,"d":"2027-01-31","day":"Sun","t":"Long run","route":"Peak District: Edale Skyline from Hope station. Turn back, or drop into Edale at Ringing Roger, when you reach 32 km or 800 m of climbing, whichever comes first.","km":32,"cl":800,"note":""},{"w":11,"d":"2027-02-01","day":"Mon","t":"Recovery","route":"The Inkpot loop (6.3 km, 60 m, start Rainworth)","km":6.0,"cl":50,"note":""},{"w":11,"d":"2027-02-03","day":"Wed","t":"Hill session (11 repeats)","route":"Warm up 10 minutes, then 11 x 3 minutes uphill, steady-hard, on the steepest climb of the Blidworth Blast loop (5.3 km, 70 m, start Blidworth), jogging back down. Cool down 10 minutes.","km":9.0,"cl":240,"note":""},{"w":11,"d":"2027-02-05","day":"Fri","t":"Easy rolling","route":"Fox and Hounds loop plus Cafe in the Woods loop joined (about 12.8 km, 160 m, start Blidworth); trim to the distance","km":9.0,"cl":190,"note":""},{"w":11,"d":"2027-02-07","day":"Sun","t":"Long run","route":"Peak District: Edale Skyline from Hope station (32 km, 1,252 m), then add the Win Hill and Lose Hill section to reach the distance. Stop at 34 km or 950 m, whichever comes first.","km":34,"cl":950,"note":""},{"w":12,"d":"2027-02-08","day":"Mon","t":"Recovery","route":"The Inkpot loop (6.3 km, 60 m, start Rainworth)","km":5.5,"cl":45,"note":""},{"w":12,"d":"2027-02-10","day":"Wed","t":"Hill session (6 repeats)","route":"Warm up 10 minutes, then 6 x 3 minutes uphill, steady-hard, on the steepest climb of the Blidworth Blast loop (5.3 km, 70 m, start Blidworth), jogging back down. Cool down 10 minutes.","km":8.0,"cl":220,"note":""},{"w":12,"d":"2027-02-12","day":"Fri","t":"Easy rolling","route":"Fox and Hounds loop (7.6 km, 90 m, start Blidworth); trim or add trail to reach the distance","km":8.5,"cl":175,"note":""},{"w":12,"d":"2027-02-14","day":"Sun","t":"Long run (easy week)","route":"Thieves Wood and Fountain Dale loop (18 km, 200 m) plus a Fox and Hounds extension. Add extra hill repeats on the Blidworth Blast climb if short of the climb target.","km":22,"cl":350,"note":""},{"w":13,"d":"2027-02-15","day":"Mon","t":"Recovery","route":"The Inkpot loop (6.3 km, 60 m, start Rainworth)","km":6.5,"cl":50,"note":""},{"w":13,"d":"2027-02-17","day":"Wed","t":"Hill session (12 repeats)","route":"Warm up 10 minutes, then 12 x 3 minutes uphill, steady-hard, on the steepest climb of the Blidworth Blast loop (5.3 km, 70 m, start Blidworth), jogging back down. Cool down 10 minutes.","km":9.5,"cl":260,"note":""},{"w":13,"d":"2027-02-19","day":"Fri","t":"Easy rolling","route":"Fox and Hounds loop plus Cafe in the Woods loop joined (about 12.8 km, 160 m, start Blidworth); trim to the distance","km":10.0,"cl":210,"note":""},{"w":13,"d":"2027-02-21","day":"Sun","t":"Long run","route":"Peak District: Edale Skyline from Hope station (32 km, 1,252 m), then add the Win Hill and Lose Hill section to reach the distance. Stop at 34 km or 1100 m, whichever comes first.","km":34,"cl":1100,"note":""},{"w":14,"d":"2027-02-22","day":"Mon","t":"Recovery","route":"Fox and Hounds / Cafe in the Woods loop (7.6 km, 90 m, start Blidworth); trim or add trail to reach the distance","km":7.0,"cl":55,"note":""},{"w":14,"d":"2027-02-24","day":"Wed","t":"Hill session (12 repeats)","route":"Warm up 10 minutes, then 12 x 3 minutes uphill, steady-hard, on the steepest climb of the Blidworth Blast loop (5.3 km, 70 m, start Blidworth), jogging back down. Cool down 10 minutes.","km":10.5,"cl":280,"note":""},{"w":14,"d":"2027-02-26","day":"Fri","t":"Easy rolling","route":"Fox and Hounds loop plus Cafe in the Woods loop joined (about 12.8 km, 160 m, start Blidworth); trim to the distance","km":10.5,"cl":225,"note":""},{"w":14,"d":"2027-02-28","day":"Sun","t":"Long run: Hope Valley Round","route":"Peak District: Outside Hope Valley Round, full route (Hathersage). Walk the steep climbs. Course rehearsal for race day.","km":32,"cl":1370,"note":"Rehearsal for race day: practise fuelling and kit"},{"w":15,"d":"2027-03-01","day":"Mon","t":"Recovery","route":"Fox and Hounds / Cafe in the Woods loop (7.6 km, 90 m, start Blidworth); trim or add trail to reach the distance","km":7.0,"cl":55,"note":""},{"w":15,"d":"2027-03-03","day":"Wed","t":"Hill session (12 repeats)","route":"Warm up 10 minutes, then 12 x 3 minutes uphill, steady-hard, on the steepest climb of the Blidworth Blast loop (5.3 km, 70 m, start Blidworth), jogging back down. Cool down 10 minutes.","km":10.5,"cl":280,"note":""},{"w":15,"d":"2027-03-05","day":"Fri","t":"Easy rolling","route":"Fox and Hounds loop plus Cafe in the Woods loop joined (about 12.8 km, 160 m, start Blidworth); trim to the distance","km":10.5,"cl":225,"note":""},{"w":15,"d":"2027-03-07","day":"Sun","t":"Long run","route":"Peak District: Edale Skyline from Hope station (32 km, 1,252 m), then add the Win Hill and Lose Hill section to reach the distance. Stop at 38 km or 1500 m, whichever comes first.","km":38,"cl":1500,"note":""},{"w":16,"d":"2027-03-08","day":"Mon","t":"Recovery","route":"The Inkpot loop (6.3 km, 60 m, start Rainworth)","km":6.0,"cl":50,"note":""},{"w":16,"d":"2027-03-10","day":"Wed","t":"Hill session (6 repeats)","route":"Warm up 10 minutes, then 6 x 3 minutes uphill, steady-hard, on the steepest climb of the Blidworth Blast loop (5.3 km, 70 m, start Blidworth), jogging back down. Cool down 10 minutes.","km":9.0,"cl":240,"note":""},{"w":16,"d":"2027-03-12","day":"Fri","t":"Easy rolling","route":"Fox and Hounds loop plus Cafe in the Woods loop joined (about 12.8 km, 160 m, start Blidworth); trim to the distance","km":9.0,"cl":190,"note":""},{"w":16,"d":"2027-03-14","day":"Sun","t":"Long run (easy week)","route":"Thieves Wood and Fountain Dale loop (18 km, 200 m) plus a Fox and Hounds extension. Add extra hill repeats on the Blidworth Blast climb if short of the climb target.","km":24,"cl":400,"note":""},{"w":17,"d":"2027-03-15","day":"Mon","t":"Recovery","route":"Fox and Hounds / Cafe in the Woods loop (7.6 km, 90 m, start Blidworth); trim or add trail to reach the distance","km":7.0,"cl":55,"note":""},{"w":17,"d":"2027-03-17","day":"Wed","t":"Hill session (12 repeats)","route":"Warm up 10 minutes, then 12 x 3 minutes uphill, steady-hard, on the steepest climb of the Blidworth Blast loop (5.3 km, 70 m, start Blidworth), jogging back down. Cool down 10 minutes.","km":10.5,"cl":280,"note":""},{"w":17,"d":"2027-03-19","day":"Fri","t":"Easy rolling","route":"Fox and Hounds loop plus Cafe in the Woods loop joined (about 12.8 km, 160 m, start Blidworth); trim to the distance","km":10.5,"cl":225,"note":""},{"w":17,"d":"2027-03-21","day":"Sun","t":"Long run","route":"Peak District: Edale Skyline from Hope station (32 km, 1,252 m), then add the Win Hill and Lose Hill section to reach the distance. Stop at 40 km or 1650 m, whichever comes first.","km":40,"cl":1650,"note":""},{"w":18,"d":"2027-03-22","day":"Mon","t":"Recovery","route":"Fox and Hounds / Cafe in the Woods loop (7.6 km, 90 m, start Blidworth); trim or add trail to reach the distance","km":7.0,"cl":55,"note":""},{"w":18,"d":"2027-03-24","day":"Wed","t":"Hill session (12 repeats)","route":"Warm up 10 minutes, then 12 x 3 minutes uphill, steady-hard, on the steepest climb of the Blidworth Blast loop (5.3 km, 70 m, start Blidworth), jogging back down. Cool down 10 minutes.","km":10.5,"cl":280,"note":""},{"w":18,"d":"2027-03-26","day":"Fri","t":"Easy rolling","route":"Fox and Hounds loop plus Cafe in the Woods loop joined (about 12.8 km, 160 m, start Blidworth); trim to the distance","km":10.5,"cl":225,"note":""},{"w":18,"d":"2027-03-28","day":"Sun","t":"Long run","route":"Peak District: Edale Skyline from Hope station (32 km, 1,252 m), then add the Win Hill and Lose Hill section to reach the distance. Stop at 42 km or 1800 m, whichever comes first.","km":42,"cl":1800,"note":""},{"w":19,"d":"2027-03-29","day":"Mon","t":"Recovery","route":"Fox and Hounds / Cafe in the Woods loop (7.6 km, 90 m, start Blidworth); trim or add trail to reach the distance","km":7.0,"cl":55,"note":""},{"w":19,"d":"2027-03-31","day":"Wed","t":"Hill session (12 repeats)","route":"Warm up 10 minutes, then 12 x 3 minutes uphill, steady-hard, on the steepest climb of the Blidworth Blast loop (5.3 km, 70 m, start Blidworth), jogging back down. Cool down 10 minutes.","km":10.5,"cl":280,"note":""},{"w":19,"d":"2027-04-02","day":"Fri","t":"Easy rolling","route":"Fox and Hounds loop plus Cafe in the Woods loop joined (about 12.8 km, 160 m, start Blidworth); trim to the distance","km":10.5,"cl":225,"note":""},{"w":19,"d":"2027-04-04","day":"Sun","t":"Long run","route":"Peak District: Edale Skyline from Hope station (32 km, 1,252 m), then add the Win Hill and Lose Hill section to reach the distance. Stop at 44 km or 1900 m, whichever comes first.","km":44,"cl":1900,"note":""},{"w":20,"d":"2027-04-05","day":"Mon","t":"Recovery","route":"The Inkpot loop (6.3 km, 60 m, start Rainworth)","km":6.0,"cl":50,"note":""},{"w":20,"d":"2027-04-07","day":"Wed","t":"Hill session (6 repeats)","route":"Warm up 10 minutes, then 6 x 3 minutes uphill, steady-hard, on the steepest climb of the Blidworth Blast loop (5.3 km, 70 m, start Blidworth), jogging back down. Cool down 10 minutes.","km":9.0,"cl":240,"note":""},{"w":20,"d":"2027-04-09","day":"Fri","t":"Easy rolling","route":"Fox and Hounds loop plus Cafe in the Woods loop joined (about 12.8 km, 160 m, start Blidworth); trim to the distance","km":9.0,"cl":190,"note":""},{"w":20,"d":"2027-04-11","day":"Sun","t":"Long run (easy week)","route":"Thieves Wood and Fountain Dale loop (18 km, 200 m) plus a Fox and Hounds extension. Add extra hill repeats on the Blidworth Blast climb if short of the climb target.","km":26,"cl":400,"note":""},{"w":21,"d":"2027-04-12","day":"Mon","t":"Recovery","route":"The Inkpot loop (6.3 km, 60 m, start Rainworth)","km":6.5,"cl":50,"note":""},{"w":21,"d":"2027-04-14","day":"Wed","t":"Hill session (12 repeats)","route":"Warm up 10 minutes, then 12 x 3 minutes uphill, steady-hard, on the steepest climb of the Blidworth Blast loop (5.3 km, 70 m, start Blidworth), jogging back down. Cool down 10 minutes.","km":9.5,"cl":260,"note":""},{"w":21,"d":"2027-04-16","day":"Fri","t":"Easy rolling","route":"Fox and Hounds loop plus Cafe in the Woods loop joined (about 12.8 km, 160 m, start Blidworth); trim to the distance","km":10.0,"cl":210,"note":""},{"w":21,"d":"2027-04-18","day":"Sun","t":"Long run","route":"Peak District: Win Hill and Lose Hill loop (about 25 km, 1,250 m, Ladybower east car park), then add Edale Skyline sections or extra paths to reach 36 km and 1,600 m.","km":36,"cl":1600,"note":""},{"w":22,"d":"2027-04-19","day":"Mon","t":"Recovery","route":"The Inkpot loop (6.3 km, 60 m, start Rainworth)","km":6.0,"cl":50,"note":""},{"w":22,"d":"2027-04-21","day":"Wed","t":"Hill session (12 repeats)","route":"Warm up 10 minutes, then 12 x 3 minutes uphill, steady-hard, on the steepest climb of the Blidworth Blast loop (5.3 km, 70 m, start Blidworth), jogging back down. Cool down 10 minutes.","km":9.0,"cl":250,"note":""},{"w":22,"d":"2027-04-23","day":"Fri","t":"Easy rolling","route":"Fox and Hounds loop plus Cafe in the Woods loop joined (about 12.8 km, 160 m, start Blidworth); trim to the distance","km":10.0,"cl":200,"note":""},{"w":22,"d":"2027-04-25","day":"Sun","t":"Long run","route":"Peak District: Edale Skyline from Hope station. Turn back, or drop into Edale at Ringing Roger, when you reach 30 km or 1200 m of climbing, whichever comes first.","km":30,"cl":1200,"note":""},{"w":23,"d":"2027-04-26","day":"Mon","t":"Recovery","route":"The Inkpot loop (6.3 km, 60 m, start Rainworth)","km":5.5,"cl":45,"note":""},{"w":23,"d":"2027-04-28","day":"Wed","t":"Hill session (8 repeats)","route":"Warm up 10 minutes, then 8 x 3 minutes uphill, steady-hard, on the steepest climb of the Blidworth Blast loop (5.3 km, 70 m, start Blidworth), jogging back down. Cool down 10 minutes.","km":8.0,"cl":220,"note":""},{"w":23,"d":"2027-04-30","day":"Fri","t":"Easy rolling","route":"Fox and Hounds loop (7.6 km, 90 m, start Blidworth); trim or add trail to reach the distance","km":8.5,"cl":175,"note":""},{"w":23,"d":"2027-05-02","day":"Sun","t":"Long run","route":"Thieves Wood and Fountain Dale loop (18 km, 200 m) plus a Fox and Hounds extension. Add extra hill repeats on the Blidworth Blast climb if short of the climb target.","km":20,"cl":300,"note":""},{"w":24,"d":"2027-05-03","day":"Mon","t":"Recovery","route":"Short out-and-back on the Blidworth Woods trails","km":4.0,"cl":30,"note":""},{"w":24,"d":"2027-05-05","day":"Wed","t":"Hill session (6 repeats)","route":"Warm up 10 minutes, then 6 x 3 minutes uphill, steady-hard, on the steepest climb of the Blidworth Blast loop (5.3 km, 70 m, start Blidworth), jogging back down. Cool down 10 minutes.","km":6.0,"cl":160,"note":""},{"w":24,"d":"2027-05-07","day":"Fri","t":"Easy rolling","route":"Cafe in the Woods loop, Blidworth Woods (5.3 km, 70 m, start Papplewick Pumping Station)","km":6.0,"cl":130,"note":""},{"w":24,"d":"2027-05-09","day":"Sun","t":"Long run","route":"Thieves Wood and Fountain Dale loop (18 km, 200 m, start Blidworth); shorten or extend to the distance","km":14,"cl":150,"note":""},{"w":25,"d":"2027-05-10","day":"Mon","t":"Easy","route":"The Inkpot loop (6.3 km, 60 m, start Rainworth)","km":5,"cl":40,"note":""},{"w":25,"d":"2027-05-12","day":"Wed","t":"Easy with 4 strides","route":"Easy trail run near home; four 20-second relaxed strides","km":4,"cl":40,"note":""},{"w":25,"d":"2027-05-14","day":"Fri","t":"Shake-out","route":"Very easy 3 km, then rest and prepare kit","km":3,"cl":20,"note":""},{"w":25,"d":"2027-05-15","day":"Sat","t":"RACE","route":"Eryri 50K, start Llanberis 08:30. Cut-off 14 h. Walk the climbs, eat early.","km":56,"cl":3400,"note":"Race day"}],"weeks":[{"w":1,"focus":"Base","km":36,"cl":610,"lk":18,"lc":250},{"w":2,"focus":"Base","km":39,"cl":680,"lk":20,"lc":300},{"w":3,"focus":"Base","km":42,"cl":730,"lk":22,"lc":330},{"w":4,"focus":"Easy week","km":32,"cl":520,"lk":16,"lc":200},{"w":5,"focus":"Base (Christmas week)","km":44,"cl":750,"lk":24,"lc":350},{"w":6,"focus":"Base","km":47,"cl":870,"lk":26,"lc":450},{"w":7,"focus":"Base","km":50,"cl":990,"lk":28,"lc":550},{"w":8,"focus":"Easy week","km":38,"cl":650,"lk":18,"lc":250},{"w":9,"focus":"Build","km":52,"cl":1140,"lk":30,"lc":700},{"w":10,"focus":"Build","km":55,"cl":1260,"lk":32,"lc":800},{"w":11,"focus":"Build","km":58,"cl":1430,"lk":34,"lc":950},{"w":12,"focus":"Easy week","km":44,"cl":790,"lk":22,"lc":350},{"w":13,"focus":"Build","km":60,"cl":1620,"lk":34,"lc":1100},{"w":14,"focus":"Build: Hope Valley Round rehearsal","km":60,"cl":1930,"lk":32,"lc":1370},{"w":15,"focus":"Build","km":66,"cl":2060,"lk":38,"lc":1500},{"w":16,"focus":"Easy week","km":48,"cl":880,"lk":24,"lc":400},{"w":17,"focus":"Specific","km":68,"cl":2210,"lk":40,"lc":1650},{"w":18,"focus":"Specific","km":70,"cl":2360,"lk":42,"lc":1800},{"w":19,"focus":"Peak week","km":72,"cl":2460,"lk":44,"lc":1900},{"w":20,"focus":"Easy week","km":50,"cl":880,"lk":26,"lc":400},{"w":21,"focus":"Specific: second big climbing day","km":62,"cl":2120,"lk":36,"lc":1600},{"w":22,"focus":"Last long run","km":55,"cl":1700,"lk":30,"lc":1200},{"w":23,"focus":"Taper","km":42,"cl":740,"lk":20,"lc":300},{"w":24,"focus":"Taper","km":30,"cl":470,"lk":14,"lc":150},{"w":25,"focus":"Race week","km":12,"cl":100,"lk":0,"lc":0}]};
+const START='2026-11-23', RACE='2027-05-15', BASE='2026-09-14';
+const MPK=5.7, MPC=4.5; // min per km, min per 100 m
+const CARDIO=['Rowing machine','Water rowing','Cycling','Treadmill or incline walk','Stair climber','Other cardio','Walking or hiking'];
+const ROUTELIB=[{"n":"Blidworth Blast loop","km":5.3,"cl":70,"peak":0,"approx":0,"desc":"Home loop with the steepest climb in the woods."},{"n":"Blidworth Blast, two laps","km":10.6,"cl":140,"peak":0,"approx":0,"desc":"Two laps of the Blast loop: twice the steep climb for little extra distance."},{"n":"Fox and Hounds loop","km":7.55,"cl":90,"peak":0,"approx":0,"desc":"Rolling woodland loop from Blidworth."},{"n":"Cafe in the Woods loop","km":5.29,"cl":70,"peak":0,"approx":0,"desc":"Short rolling loop from Papplewick Pumping Station."},{"n":"Inkpot loop","km":6.25,"cl":60,"peak":0,"approx":0,"desc":"Flat-ish easy loop from Rainworth. Good for recovery."},{"n":"Fox and Hounds plus Cafe loops","km":12.8,"cl":160,"peak":0,"approx":0,"desc":"The two woodland loops joined."},{"n":"Thieves Wood and Fountain Dale","km":18,"cl":200,"peak":0,"approx":0,"desc":"Longest local loop from Blidworth."},{"n":"Thieves Wood loop plus Blast climbs","km":20,"cl":340,"peak":0,"approx":1,"desc":"The 18 km loop with two extra repeats of the Blast climb tacked on."},{"n":"Outside Hope Valley Round","km":32,"cl":1372,"peak":1,"approx":0,"desc":"Course rehearsal: Hathersage start. Walk the steep climbs."},{"n":"Edale Skyline","km":32,"cl":1252,"peak":1,"approx":0,"desc":"From Hope station. Turn back at your distance or climb target."},{"n":"Win Hill and Lose Hill","km":25,"cl":1250,"peak":1,"approx":0,"desc":"Ladybower east car park. Add Skyline sections to go longer."},{"n":"Win Hill out and back","km":11,"cl":480,"peak":1,"approx":1,"desc":"From Ladybower. A short Peak District climb day."},{"n":"Lose Hill, Back Tor and Hollins Cross","km":14,"cl":650,"peak":1,"approx":1,"desc":"From Hope. Ridge running with steady climbs."},{"n":"Mam Tor and Lose Hill ridge","km":13,"cl":600,"peak":1,"approx":1,"desc":"Out and back along the Great Ridge from Castleton."},{"n":"Kinder Scout via Grindsbrook","km":16,"cl":700,"peak":1,"approx":1,"desc":"From Edale. Steep start, then boggy plateau; take a map."}];
+const ROUTES=ROUTELIB.map(x=>x.n).concat('Other');
+const chosenRoute=d=>{const n=state.routes&&state.routes[d];return n?ROUTELIB.find(x=>x.n===n):null};
+function routeUI(r){
+ if(r.reps||r.day==='Sat'||r.run)return '';
+ const ch=chosenRoute(r.d),km=r.adjKm;
+ const opts=ROUTELIB.filter(x=>x.km>=km*.7&&x.km<=km*1.35&&(!x.peak||km>=11)).sort((a,b)=>Math.abs(a.cl-r.adjCl)-Math.abs(b.cl-r.adjCl)).slice(0,5);
+ if(!opts.length&&!ch)return '';
+ return `<details style="border:0;padding:6px 0 0"><summary class="small" style="color:var(--accent)">Swap route${ch?' (changed)':''}</summary>${opts.map(x=>`<div class="item" style="padding:6px 0"><div style="min-width:0"><b class="small">${esc(x.n)}</b>${x.peak?' <span class="pill">Peak District</span>':''}<div class="small muted">${x.km} km, ${x.cl} m${x.approx?' (estimate)':''}. ${esc(x.desc)}</div></div><button class="sm ghost" data-rt="${r.d}|${ROUTELIB.indexOf(x)}" style="align-self:center">Use</button></div>`).join('')}${ch?`<button class="sm ghost" data-rt="${r.d}|x">Back to plan route</button>`:''}</details>`}
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const pd=s=>{const [y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d)};
+const fd=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const addDays=(s,n)=>{const d=pd(s);d.setDate(d.getDate()+n);return fd(d)};
+const diff=(a,b)=>Math.round((pd(a)-pd(b))/864e5);
+const mondayOf=s=>addDays(s,-((pd(s).getDay()+6)%7));
+const today=()=>fd(new Date());
+const nice=s=>pd(s).toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'});
+const shortD=s=>pd(s).toLocaleDateString('en-GB',{day:'numeric',month:'short'});
+const hm=secs=>{const m=Math.round(secs/60);return Math.floor(m/60)+'h'+String(m%60).padStart(2,'0')};
+const hmm=min=>hm(min*60);
+const pace=(secs,km)=>{if(!km)return '–';const p=secs/km;return Math.floor(p/60)+':'+String(Math.round(p%60)).padStart(2,'0')};
+const r05=x=>Math.round(x*2)/2, r5=x=>Math.round(x/5)*5;
+const estMin=(km,cl)=>km*MPK+cl/100*MPC;
+
+let runs=[],gym=[],state={},db=null,ready=false,toastT;
+let prefill=null, logMode='run', chartRange=12, selWeek=null;
+
+function toast(m){let t=$('.toast');if(t)t.remove();t=document.createElement('div');t.className='toast';t.textContent=m;document.body.append(t);clearTimeout(toastT);toastT=setTimeout(()=>t.remove(),2200)}
+
+/* ---------- data ---------- */
+const runsIn=(a,b)=>runs.filter(r=>r.date>=a&&r.date<=b);
+const gymIn=(a,b)=>gym.filter(g=>g.date>=a&&g.date<=b);
+function totals(mon){const rs=runsIn(mon,addDays(mon,6));const km=rs.reduce((s,r)=>s+r.km,0),cl=rs.reduce((s,r)=>s+r.climb,0),secs=rs.reduce((s,r)=>s+r.secs,0);
+ const hrs=rs.filter(r=>r.hr>0);const hs=hrs.reduce((s,r)=>s+r.secs,0);
+ return{n:rs.length,km,cl,secs,spd:secs?km/(secs/3600):null,hr:hs?hrs.reduce((s,r)=>s+r.hr*r.secs,0)/hs:null,gym:gymIn(mon,addDays(mon,6)).length,gymMin:gymIn(mon,addDays(mon,6)).reduce((s,g)=>s+g.mins,0)}}
+function curWeek(){const t=today();if(t<START)return 1;return Math.min(25,Math.floor(diff(t,START)/7)+1)}
+const weekMon=w=>addDays(START,7*(w-1));
+
+/* ---------- adaptive engine ---------- */
+function adjust(w){
+ const t=today(),mon=weekMon(w),sun=addDays(mon,6),wk=PLAN.weeks[w-1];
+ const rows=PLAN.plan.filter(r=>r.w===w).map(r=>({...r,run:null,adjKm:r.km,adjCl:r.cl,reps:null,why:[]}));
+ const reasons=[];
+ const wr=runsIn(mon,sun),used=new Set();
+ rows.forEach(r=>{const m=wr.find(x=>x.date===r.d&&!used.has(x.id));if(m){used.add(m.id);r.run=m}});
+ rows.forEach(r=>{if(!r.run){const m=wr.find(x=>!used.has(x.id)&&Math.abs(diff(x.date,r.d))===1);if(m){used.add(m.id);r.run=m}}});
+ rows.forEach(r=>{const mm=/\((\d+) repeats\)/.exec(r.t);if(mm)r.reps=+mm[1];
+  r.status=r.run?'done':(r.d<t?'missed':(r.d===t?'today':'next'))});
+ const tot=totals(mon);
+ const out={w,mon,rows,reasons,wk,done:tot,planKm:wk.km,planCl:wk.cl};
+ if(w===25){out.adjKm=wk.km;out.adjCl=wk.cl;return out}
+ // 1. cap from recent load
+ const p1=totals(addDays(mon,-7)),p2=totals(addDays(mon,-14));
+ const refCl=Math.max(p1.cl,p2.cl),refKm=Math.max(p1.km,p2.km);
+ let effKm=wk.km,effCl=wk.cl;
+ if(refCl>0&&wk.cl>refCl*1.15){effCl=r5(refCl*1.15);reasons.push(`Climb target trimmed from ${wk.cl} m to ${effCl} m: it would be more than 15% above your recent best week (${Math.round(refCl)} m).`)}
+ if(refKm>0&&wk.km>refKm*1.12){effKm=r05(refKm*1.12);reasons.push(`Distance target trimmed from ${wk.km} km to ${effKm} km: more than 12% above your recent best week (${refKm.toFixed(1)} km).`)}
+ // 2. remaining runs
+ const rem=rows.filter(r=>!r.run&&r.d>=t&&r.day!=='Sat');
+ const missed=rows.filter(r=>!r.run&&r.d<t);
+ let fK=1,fC=1;
+ if(rem.length){
+  const sK=rem.reduce((s,r)=>s+r.km,0),sC=rem.reduce((s,r)=>s+r.cl,0);
+  const needK=Math.max(0,effKm-tot.km),needC=Math.max(0,effCl-tot.cl);
+  fK=Math.min(1.1,Math.max(.6,sK?needK/sK:1));fC=Math.min(1.1,Math.max(.5,sC?needC/sC:1));
+  if(effKm===wk.km&&effCl===wk.cl&&Math.abs(fK-1)<.03&&Math.abs(fC-1)<.03){fK=fC=1}
+  else if(fK!==1||fC!==1){
+   if(tot.n>0&&(tot.km>0||tot.cl>0)){
+    const pk=Math.round(tot.km/effKm*100),pc=Math.round(tot.cl/effCl*100);
+    if(fK<1||fC<1)reasons.push(`You have done ${pk}% of the week's distance and ${pc}% of its climb already, so the remaining runs are scaled down.`);
+    else reasons.push(`You are behind on the week (${pk}% of distance, ${pc}% of climb), so the remaining runs are nudged up, capped at +10%.`);
+   }else if(fK<1||fC<1)reasons.push('Remaining runs are scaled to the trimmed weekly target.')}
+  if(missed.length&&rem.length)reasons.push(`${missed.map(m=>m.day).join(' and ')} not logged. Missed runs are not crammed in: remaining runs rise by 10% at most.`);
+ }
+ // 3. tired toggle
+ const tired=!!(state.tired&&state.tired['w'+w]);
+ if(tired&&rem.length)reasons.push('Tired-legs mode is on: remaining runs are 15% shorter and hill reps are reduced.');
+ // 4. gym
+ rem.forEach(r=>{
+  r.adjKm=r.km*fK*(tired?.85:1);r.adjCl=r.cl*fC*(tired?.85:1);
+  const g=gym.filter(x=>x.date===addDays(r.d,-1)&&(x.rpe>=7||(x.type==='Legs'&&x.mins>=40)||(CARDIO.includes(x.type)&&x.mins>=75)));
+  if(g.length){r.adjKm*=.85;r.adjCl*=.85;r.gymHit=true;reasons.push(`Heavy gym session the day before ${r.day} (${g[0].type}, effort ${g[0].rpe}/10): ${r.day} is 15% lighter.`)}
+  if(r.reps){let n=Math.round(r.reps*Math.min(fC,1)*(tired?.85:1));if(r.gymHit)n-=2;r.reps=Math.max(4,Math.min(r.reps+1,n))}
+ });
+ rem.forEach(r=>{r.adjKm=Math.max(2,r05(r.adjKm));r.adjCl=r5(r.adjCl);r.changed=Math.abs(r.adjKm-r.km)>=.5||Math.abs(r.adjCl-r.cl)>=10;
+  if(r.reps){const o=+/\((\d+) repeats\)/.exec(r.t)[1];r.repsChanged=r.reps!==o;r.changed=r.changed||r.repsChanged}});
+ out.adjKm=tot.km+rows.filter(r=>!r.run&&r.d>=t).reduce((s,r)=>s+r.adjKm,0)+0;
+ out.adjCl=tot.cl+rows.filter(r=>!r.run&&r.d>=t).reduce((s,r)=>s+r.adjCl,0);
+ out.tired=tired;out.rem=rem;
+ // next week outlook
+ if(w<25){const nx=PLAN.weeks[w];const doneRef=Math.max(tot.cl,out.adjCl);const cap=r5(Math.max(doneRef,refCl)*1.15);
+  out.next={w:w+1,focus:nx.focus,cl:nx.cl,km:nx.km,capCl:cap,trim:nx.cl>cap}}
+ return out}
+
+/* ---------- charts ---------- */
+function weeksList(){const last=mondayOf(today()),out=[];for(let m=BASE;m<=last;m=addDays(m,7))out.push(m);return out}
+function planFor(mon){const w=Math.floor(diff(mon,START)/7)+1;if(w<1||w>25)return null;return PLAN.weeks[w-1]}
+function chart(o){
+ const W=360,H=132,pl=32,pr=6,pt=8,pb=20;
+ const ms=weeksList(),all=ms,sl=chartRange?all.slice(-chartRange):all,n=sl.length,step=(W-pl-pr)/n;
+ const vals=sl.map(m=>o.val(totals(m))),plans=o.plan?sl.map(m=>o.plan(planFor(m))):[];
+ const cand=vals.concat(plans).filter(v=>v!=null&&isFinite(v));
+ let mx=Math.max(...cand,o.min||1)*1.12,mn=0;
+ if(o.line){const lo=Math.min(...cand),hi=Math.max(...cand);const pad=(hi-lo)*.2||1;mn=Math.max(0,lo-pad);mx=hi+pad}
+ const y=v=>pt+(H-pt-pb)*(1-(v-mn)/(mx-mn));
+ let s=`<svg class="ch" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(o.title)} by week">`;
+ for(let i=0;i<=3;i++){const v=mn+(mx-mn)*i/3;s+=`<line class="grid" x1="${pl}" x2="${W-pr}" y1="${y(v)}" y2="${y(v)}"/><text x="${pl-4}" y="${y(v)+3}" text-anchor="end">${o.axis(v)}</text>`}
+ const every=Math.ceil(n/6);
+ sl.forEach((m,i)=>{const x=pl+i*step,cx=x+step/2,v=vals[i];
+  if(m===selWeek)s+=`<rect class="sel" x="${x}" y="${pt}" width="${step}" height="${H-pt-pb}"/>`;
+  if(i%every===0||i===n-1)s+=`<text x="${cx}" y="${H-6}" text-anchor="middle">${esc(shortD(m))}</text>`;
+  if(!o.line&&v>0){const bw=Math.max(3,step*.62);s+=`<rect class="bar${m===mondayOf(today())?' cur':''}" x="${cx-bw/2}" y="${y(v)}" width="${bw}" height="${y(0)-y(v)}" rx="2"/>`}
+  if(!o.line&&plans[i]){s+=`<line class="tick" x1="${cx-step*.4}" x2="${cx+step*.4}" y1="${y(plans[i])}" y2="${y(plans[i])}"/>`}
+  s+=`<rect x="${x}" y="0" width="${step}" height="${H}" fill="transparent" data-wk="${m}"/>`});
+ if(o.line){let d='',pts=[];sl.forEach((m,i)=>{const v=vals[i];if(v!=null){const cx=pl+i*step+step/2;d+=(d&&pts.length&&pts[pts.length-1]===i-1?'L':'M')+cx+' '+y(v);pts.push(i)}});
+  s+=`<path class="ln" d="${d}"/>`;sl.forEach((m,i)=>{const v=vals[i];if(v!=null)s+=`<circle class="dot" cx="${pl+i*step+step/2}" cy="${y(v)}" r="4"/>`})}
+ return s+'</svg>'}
+const CH=[
+ {title:'Distance (km)',val:t=>t.km,plan:p=>p&&p.km,axis:v=>Math.round(v),key:'km'},
+ {title:'Climbing (m)',val:t=>t.cl,plan:p=>p&&p.cl,axis:v=>Math.round(v),key:'cl'},
+ {title:'Time on feet (h)',val:t=>t.secs/3600,plan:p=>p&&estMin(p.km,p.cl)/60,axis:v=>v.toFixed(1),key:'t'},
+ {title:'Average speed (km/h)',val:t=>t.spd,line:1,axis:v=>v.toFixed(1),key:'s'},
+ {title:'Average heart rate (bpm)',val:t=>t.hr,line:1,axis:v=>Math.round(v),key:'h'},
+ {title:'Gym and cross-training sessions',min:3,val:t=>t.gym,axis:v=>Math.round(v),key:'g'}];
+
+/* ---------- views ---------- */
+function runCard(r,w){
+ const km=r.adjKm,cl=r.adjCl,isRace=r.day==='Sat'&&r.t==='RACE';
+ let h=`<div class="card run ${r.status}"><div class="row sp"><div><span class="lbl">${nice(r.d)}</span><h2 style="margin:2px 0 0">${esc(r.t)}</h2></div>`;
+ h+=r.status==='done'?'<span class="pill g">Done</span>':r.status==='today'?'<span class="pill a">Today</span>':r.status==='missed'?'<span class="pill w">Not logged</span>':(r.changed?'<span class="pill w">Adjusted</span>':'');
+ h+='</div>';
+ if(r.run){const x=r.run;h+=`<div class="nums"><div><span class="lbl">Ran</span><br><b>${x.km.toFixed(1)} km</b></div><div><span class="lbl">Climb</span><br><b>${Math.round(x.climb)} m</b></div><div><span class="lbl">Time</span><br><b>${hm(x.secs)}</b></div><div><span class="lbl">Pace</span><br><b>${pace(x.secs,x.km)}</b></div></div><div class="small muted">Plan was ${r.km} km, ${r.cl} m.</div>`}
+ else{const ch=r.changed&&!isRace;
+  h+=`<div class="nums"><div><span class="lbl">Distance</span><br>${ch&&Math.abs(km-r.km)>=.5?`<s>${r.km}</s>`:''}<b>${km} km</b></div><div><span class="lbl">Climb</span><br>${ch&&Math.abs(cl-r.cl)>=10?`<s>${r.cl}</s>`:''}<b>${cl} m</b></div><div><span class="lbl">Est. time</span><br><b>${hmm(estMin(km,cl))}</b></div></div>`;
+  let rt=r.route;if(r.reps&&r.repsChanged)rt=rt.replace(/\d+ x 3 minutes/,r.reps+' x 3 minutes');
+  const ch2=chosenRoute(r.d);if(ch2)rt='Your pick: '+ch2.n+' ('+ch2.km+' km, '+ch2.cl+' m'+(ch2.approx?', estimate':'')+'). '+ch2.desc;
+  h+=`<p class="route">${esc(rt)}</p>`;h+=routeUI(r);
+  if(r.reps&&r.repsChanged)h+=`<p class="small" style="margin:6px 0 0"><b>${r.reps} repeats</b> today (plan ${/\((\d+) repeats\)/.exec(r.t)[1]}).</p>`;
+  if(r.note)h+=`<p class="small muted" style="margin:6px 0 0">${esc(r.note)}</p>`;
+  if(r.status!=='next'||true)h+=`<div style="margin-top:10px"><button class="sm ghost" data-log="${r.d}">Log this run</button></div>`}
+ return h+'</div>'}
+
+function viewWeek(){
+ const w=curWeek(),A=adjust(w),wk=A.wk,t=today(),pre=t<START;
+ const pk=A.adjKm?Math.min(100,A.done.km/A.adjKm*100):0,pc=A.adjCl?Math.min(100,A.done.cl/A.adjCl*100):0;
+ let h=`<div class="card"><div class="row sp"><div><span class="lbl">Week ${w} of 25</span><h2 style="font-size:20px;margin-top:2px">${esc(wk.focus)}</h2></div>${pre?'<span class="pill w">Starts Mon 23 Nov</span>':''}</div>`;
+ h+=`<div style="margin-top:12px" class="grid3">
+ <div><span class="lbl">Distance</span><div class="big">${A.done.km.toFixed(1)}<span class="small muted"> / ${A.adjKm.toFixed(0)} km</span></div><div class="meter"><i class="${A.done.km>A.adjKm*1.02?'over':''}" style="width:${pk}%"></i></div></div>
+ <div><span class="lbl">Climb</span><div class="big">${Math.round(A.done.cl)}<span class="small muted"> / ${Math.round(A.adjCl)} m</span></div><div class="meter"><i class="${A.done.cl>A.adjCl*1.02?'over':''}" style="width:${pc}%"></i></div></div>
+ <div><span class="lbl">Time</span><div class="big">${hm(A.done.secs)}</div><div class="small muted">${A.done.gym} gym ${A.done.gym===1?'session':'sessions'}</div></div></div>`;
+ if(A.adjKm!==wk.km||A.adjCl!==wk.cl)h+=`<p class="small muted" style="margin:10px 0 0">Original plan: ${wk.km} km, ${wk.cl} m.</p>`;
+ h+='</div>';
+ if(A.reasons.length)h+=`<div class="note"><b>Why today's plan changed</b><ul>${A.reasons.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`;
+ else if(w<25)h+=`<div class="note" style="background:var(--green-soft)">No changes: you are on plan this week.</div>`;
+ const gymDays=[1,3];
+ A.rows.forEach(r=>{h+=runCard(r,w);
+  const gi=gymDays.find(k=>addDays(A.mon,k)===addDays(r.d,1));
+  if(gi!==undefined&&r.day!=='Sun'&&r.day!=='Sat'){const gd=addDays(A.mon,gi);const gs=gym.filter(x=>x.date===gd);
+   h+=`<div class="gymrow">${gs.length?gs.map(g=>`<b>Gym ${nice(gd)}:</b> ${esc(g.type)}, ${g.mins} min, effort ${g.rpe}/10`).join('<br>'):`Gym ${nice(gd)}: nothing logged. <a href="#log" data-gym="${gd}" style="color:var(--accent);font-weight:600">Log it</a>`}</div>`}});
+ if(w<25){h+=`<div class="card"><div class="row sp"><div><h2 style="margin:0">Feeling flat?</h2><div class="small muted">Trims the rest of this week by 15%.</div></div><button class="sm ${A.tired?'':'ghost'}" id="tired">${A.tired?'Tired mode on':'Legs are tired'}</button></div></div>`;
+  if(A.next)h+=`<div class="card"><span class="lbl">Next week (${esc(A.next.focus)})</span><p style="margin:4px 0 0">Plan is ${A.next.km} km and ${A.next.cl} m. ${A.next.trim?`Based on this week it would be held to about <b>${A.next.capCl} m</b> of climbing.`:'On current numbers the plan holds.'}</p></div>`}
+ $('#view').innerHTML=h}
+
+function viewLog(){
+ const v=$('#view');
+ if(!$('#logform')){
+  v.innerHTML=`<div id="logform"></div><div id="loglist"></div>`;buildForm()}
+ renderList()}
+function buildForm(){
+ const d=prefill||today();prefill=null;
+ const f=$('#logform');
+ f.innerHTML=`<div class="seg"><button data-m="run" class="${logMode==='run'?'on':''}">Run</button><button data-m="gym" class="${logMode==='gym'?'on':''}">Gym</button></div>
+ <div class="card" id="fc">${logMode==='run'?`
+ <div class="f"><label for="f-files">Import from Garmin: pick as many zips or .fit files as you like</label><input id="f-files" type="file" accept=".zip,.fit" multiple><button class="sm ghost" id="fitimport" style="margin-top:6px">Import selected files</button><div id="impres" class="small muted" style="margin-top:6px"></div></div>
+ <div class="f"><label for="f-date">Date</label><input id="f-date" type="date" value="${d}"></div>
+ <div class="f2 f"><div><label for="f-km">Distance (km)</label><input id="f-km" type="number" inputmode="decimal" step="0.01" placeholder="12.4"></div><div><label for="f-cl">Climb (m)</label><input id="f-cl" type="number" inputmode="numeric" placeholder="180"></div></div>
+ <div class="f"><label>Time (hours, minutes, seconds)</label><div class="f3"><input id="f-h" type="number" inputmode="numeric" min="0" placeholder="h"><input id="f-m" type="number" inputmode="numeric" min="0" max="59" placeholder="min"><input id="f-s" type="number" inputmode="numeric" min="0" max="59" placeholder="sec"></div></div>
+ <div class="f"><label for="f-hr">Average heart rate (optional)</label><input id="f-hr" type="number" inputmode="numeric" placeholder="155"></div>
+ <div class="f"><label for="f-route">Route</label><select id="f-route">${ROUTES.map(x=>`<option>${esc(x)}</option>`).join('')}</select></div>
+ <div class="f"><label for="f-notes">Notes (optional)</label><input id="f-notes" type="text" placeholder="Muddy, legs heavy"></div>
+ <button id="save" style="width:100%">Save run</button>`:`
+ <div class="f"><label for="g-paste">Paste a workout from Strong (optional)</label><textarea id="g-paste" rows="3" placeholder="Morning Workout&#10;Wednesday, 27 August 2025 at 6:52 am&#10;Squat (Barbell)&#10;Set 1: 20 kg × 12 reps"></textarea><button class="sm ghost" id="strongfill" style="margin-top:6px">Fill the form from it</button></div>
+ <div class="f"><label for="g-date">Date</label><input id="g-date" type="date" value="${d}"></div>
+ <div class="f2 f"><div><label for="g-type">Type</label><select id="g-type"><option>Legs</option><option>Upper body</option><option>Full body</option><option>Core and mobility</option><option>Rowing machine</option><option>Water rowing</option><option>Cycling</option><option>Treadmill or incline walk</option><option>Stair climber</option><option>Other cardio</option></select></div><div><label for="g-min">Minutes</label><input id="g-min" type="number" inputmode="numeric" placeholder="45"></div></div>
+ <div class="f"><label for="g-rpe">How hard did it feel: <span id="rpev">6</span>/10</label><input id="g-rpe" type="range" min="1" max="10" value="6"></div>
+ <div class="f"><label for="g-notes">Notes (optional)</label><input id="g-notes" type="text" placeholder="Squats, lunges, calf raises"></div>
+ <button id="save" style="width:100%">Save gym session</button>`}</div>`}
+function renderList(){
+ const el=$('#loglist');if(!el)return;
+ const items=[...runs.map(r=>({k:'runs',id:r.id,date:r.date,a:`${r.km.toFixed(1)} km · ${Math.round(r.climb)} m · ${hm(r.secs)}`,b:`${pace(r.secs,r.km)}/km${r.hr?' · '+Math.round(r.hr)+' bpm':''}`,c:r.route||''})),
+  ...gym.map(g=>({k:'gym',id:g.id,date:g.date,a:`${g.type}, ${g.mins} min`,b:`Effort ${g.rpe}/10${g.hr?' · '+Math.round(g.hr)+' bpm':''}`,c:g.notes||''}))].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,40);
+ el.innerHTML=`<div class="card"><h2>Recent</h2>${items.length?items.map(i=>`<div class="item"><div style="min-width:0"><div class="lbl">${nice(i.date)}</div><b>${esc(i.a)}</b><div class="small muted">${esc(i.b)}${i.c?' · '+esc(i.c):''}</div></div><button class="sm ghost" data-del="${i.k}/${i.id}" style="align-self:center">Delete</button></div>`).join(''):'<div class="empty">Nothing logged yet.</div>'}</div>`}
+
+function viewCharts(){
+ const ms=weeksList(),cw=mondayOf(today());
+ const sel=selWeek||cw,T=totals(sel);
+ let h=`<div class="seg"><button data-r="12" class="${chartRange===12?'on':''}">Last 12 weeks</button><button data-r="0" class="${chartRange===0?'on':''}">Since 14 Sep</button></div>`;
+ h+=`<div class="card"><span class="lbl">Week of ${shortD(sel)}${sel===cw?' (this week)':''}</span><div class="nums" style="margin-bottom:0"><div><b>${T.km.toFixed(1)}</b> km</div><div><b>${Math.round(T.cl)}</b> m</div><div><b>${hm(T.secs)}</b></div><div><b>${T.spd?T.spd.toFixed(1):'–'}</b> km/h</div><div><b>${T.hr?Math.round(T.hr):'–'}</b> bpm</div><div><b>${T.gym}</b> gym</div></div><div class="small muted">Tap any chart to pick a week. Grey ticks are the plan's targets.</div></div>`;
+ CH.forEach(c=>{h+=`<div class="card"><h2>${c.title}</h2>${chart(c)}</div>`});
+ $('#view').innerHTML=h}
+
+function seasonChart(){
+ const W=360,H=120,pl=30,pr=6,pt=8,pb=18,step=(W-pl-pr)/25,cw=curWeek();
+ const pl_=PLAN.weeks.map(x=>x.cl),ac=PLAN.weeks.map((x,i)=>totals(weekMon(i+1)).cl);
+ const mx=Math.max(...pl_,...ac,1)*1.1,y=v=>pt+(H-pt-pb)*(1-v/mx);
+ let s=`<svg class="ch" viewBox="0 0 ${W} ${H}" role="img" aria-label="Planned and completed climbing for each of 25 weeks">`;
+ for(let i=0;i<=3;i++){const v=mx*i/3;s+=`<line class="grid" x1="${pl}" x2="${W-pr}" y1="${y(v)}" y2="${y(v)}"/><text x="${pl-4}" y="${y(v)+3}" text-anchor="end">${Math.round(v)}</text>`}
+ PLAN.weeks.forEach((x,i)=>{const cx=pl+i*step+step/2,bw=step*.62;
+  s+=`<rect x="${cx-bw/2}" y="${y(pl_[i])}" width="${bw}" height="${y(0)-y(pl_[i])}" rx="2" fill="none" stroke="var(--plan)" stroke-width="1.2"/>`;
+  if(ac[i]>0)s+=`<rect class="bar${i+1===cw?' cur':''}" x="${cx-bw/2}" y="${y(ac[i])}" width="${bw}" height="${y(0)-y(ac[i])}" rx="2"/>`;
+  if(i%4===0)s+=`<text x="${cx}" y="${H-5}" text-anchor="middle">${i+1}</text>`});
+ return s+'</svg>'}
+function viewPlan(){
+ const cw=curWeek(),best=runs.reduce((m,r)=>r.km>m.km?r:m,{km:0,climb:0});
+ const bc=runs.reduce((m,r)=>r.climb>m?r.climb:m,0);
+ let h=`<div class="card"><h2>25 weeks of climbing</h2>${seasonChart()}<div class="small muted">Outline is the plan, filled is what you have done. Numbers are week numbers.</div></div>`;
+ h+=`<div class="card"><div class="grid3"><div><span class="lbl">Longest run</span><div class="big">${best.km?best.km.toFixed(0):'–'}<span class="small muted"> km</span></div></div><div><span class="lbl">Most climb</span><div class="big">${Math.round(bc)}<span class="small muted"> m</span></div></div><div><span class="lbl">Race</span><div class="big">56<span class="small muted"> km</span></div><div class="small muted">3,400 m</div></div></div></div>`;
+ h+='<div class="card" style="padding-top:6px">';
+ PLAN.weeks.forEach((x,i)=>{const w=i+1,rs=PLAN.plan.filter(r=>r.w===w);
+  h+=`<details${w===cw?' open':''}><summary><span>Wk ${w} · ${shortD(weekMon(w))} <span class="pill${w===cw?' a':''}" style="margin-left:6px">${esc(x.focus)}</span></span><span class="small muted">${x.km} km · ${x.cl} m</span></summary>`;
+  rs.forEach(r=>{const done=runs.find(q=>q.date===r.d);h+=`<div class="item" style="padding:6px 0"><div style="min-width:0"><div class="small"><b>${r.day}</b> ${esc(r.t)}</div></div><div class="small muted" style="white-space:nowrap">${done?'✓ '+done.km.toFixed(1)+' km':r.km+' km · '+r.cl+' m'}</div></div>`});
+  h+='</details>'});
+ $('#view').innerHTML=h+'</div>'}
+
+/* ---------- router ---------- */
+const TABS=['week','log','charts','plan'];
+function tab(){const t=location.hash.slice(1);return TABS.includes(t)?t:'week'}
+function render(){
+ const t=tab();document.querySelectorAll('nav a').forEach(a=>a.classList.toggle('on',a.dataset.t===t));
+ if(t!=='log')({week:viewWeek,charts:viewCharts,plan:viewPlan})[t]();else viewLog();
+ const left=diff(RACE,today());$('#cd').textContent=Math.max(0,left)}
+window.addEventListener('hashchange',()=>{window.scrollTo(0,0);render()});
+
+/* ---------- events ---------- */
+document.addEventListener('click',async e=>{
+ const q=s=>e.target.closest(s);let el;
+ if(el=q('[data-log]')){prefill=el.dataset.log;logMode='run';location.hash='log';if($('#logform'))buildForm();return}
+ if(el=q('[data-gym]')){prefill=el.dataset.gym;logMode='gym';e.preventDefault();location.hash='log';if($('#logform'))buildForm();return}
+ if(el=q('[data-m]')){logMode=el.dataset.m;buildForm();return}
+ if(el=q('[data-r]')){chartRange=+el.dataset.r;viewCharts();return}
+ if(el=q('[data-wk]')){selWeek=el.dataset.wk;viewCharts();return}
+ if(q('#tired')){const w=curWeek();const st={...(state.tired||{})};st['w'+w]=!st['w'+w];state={...state,tired:st};render();await save('state','settings',{tired:st,routes:state.routes||{}});return}
+ if(el=q('[data-del]')){
+  if(el.dataset.arm===el.dataset.del){const [c,id]=el.dataset.del.split('/');if(c==='runs')runs=runs.filter(x=>x.id!==id);else gym=gym.filter(x=>x.id!==id);renderList();
+   try{if(db)await db.collection(c).doc(id).delete();else persistLocal()}catch(_){toast('Could not delete')}return}
+  el.dataset.arm=el.dataset.del;el.textContent='Tap again to delete';el.classList.remove('ghost');el.classList.add('bad');
+  setTimeout(()=>{if(el.isConnected){delete el.dataset.arm;el.textContent='Delete';el.classList.add('ghost');el.classList.remove('bad')}},3000);return}
+ if(el=q('[data-rt]')){const [d,i]=el.dataset.rt.split('|');const rr={...(state.routes||{})};if(i==='x')delete rr[d];else rr[d]=ROUTELIB[+i].n;state={...state,routes:rr};render();await save('state','settings',{tired:state.tired||{},routes:rr});return}
+ if(q('#strongfill'))return strongFill();
+ if(q('#fitimport'))return importFiles();
+ if(q('#save'))return doSave();
+});
+document.addEventListener('input',e=>{if(e.target.id==='g-rpe')$('#rpev').textContent=e.target.value});
+
+function parseFit(buf){
+ const dv=new DataView(buf),hs=dv.getUint8(0),end=Math.min(buf.byteLength-2,hs+dv.getUint32(4,true));
+ let p=hs;const defs={},out=[];
+ while(p<end){
+  const h=dv.getUint8(p++);
+  if(h&0x80){const d=defs[(h>>5)&3];if(!d)break;p+=d.size;continue}
+  if(h&0x40){const dev=h&0x20,loc=h&0xF;p++;const le=dv.getUint8(p++)===0;const g=dv.getUint16(p,le);p+=2;const n=dv.getUint8(p++);const f=[];let size=0;
+   for(let i=0;i<n;i++){f.push({n:dv.getUint8(p),s:dv.getUint8(p+1),o:size});size+=dv.getUint8(p+1);p+=3}
+   if(dev){const nd=dv.getUint8(p++);for(let i=0;i<nd;i++){size+=dv.getUint8(p+1);p+=3}}
+   defs[loc]={g,le,f,size};continue}
+  const d=defs[h&0xF];if(!d)break;
+  if(d.g===18){const o={};d.f.forEach(f=>{const q=p+f.o;let v=null;if(f.s===4)v=dv.getUint32(q,d.le);else if(f.s===2)v=dv.getUint16(q,d.le);else if(f.s===1)v=dv.getUint8(q);o[f.n]=v});out.push(o)}
+  p+=d.size}
+ return out}
+function crossType(o){const sp=o[5],sb=o[6];
+ if(sp===15)return 'Water rowing';
+ if(sp===2)return 'Cycling';
+ if(sp===4){if(sb===14)return 'Rowing machine';if(sb===16)return 'Stair climber';if(sb===20)return 'Strength (Garmin)';return 'Other cardio'}
+ if(sp===10)return 'Strength (Garmin)';
+ if(sp===11||sp===17)return 'Walking or hiking';
+ return null}
+async function addCross(o,t){
+ const ts=o[2]+631065600,date=fd(new Date(ts*1000)),mins=Math.round(o[8]/60000),hr=o[16]&&o[16]<255?o[16]:0;
+ if(t==='Strength (Garmin)'){const m=gym.find(x=>x.date===date&&x.src!=='garmin'&&['Legs','Upper body','Full body','Core and mobility'].includes(x.type)&&!x.hr);
+  if(m){const rec={date:m.date,type:m.type,mins:m.mins||mins,rpe:m.rpe,notes:m.notes,hr,src:'strong+garmin'};gym=gym.map(x=>x.id===m.id?{...x,...rec}:x);await save('gym',m.id,rec);return true}}
+ if(gym.some(x=>x.date===date&&x.type===t&&Math.abs(x.mins-mins)<=2))return false;
+ const est=hr?(hr<125?4:hr<140?5:hr<155?6:hr<170?7:8):6;
+ const iso=new Date(ts*1000).toISOString(),id='g_'+iso.slice(0,10).replace(/-/g,'')+'_'+iso.slice(11,16).replace(':','');
+ const rec={date,type:t,mins,rpe:est,notes:o[9]>0?(o[9]/100000).toFixed(1)+' km':'',hr,src:'garmin'};
+ gym=[...gym,{id,...rec}];await save('gym',id,rec);return true}
+async function importFiles(){
+ const fs=[...($('#f-files').files||[])],res=$('#impres');
+ if(!fs.length)return toast('Choose a file first');
+ res.textContent='Reading files...';
+ const bufs=[];
+ try{for(const f of fs){if(/\.zip$/i.test(f.name)){if(!(await ensureZip())){res.textContent='The zip reader did not load. Try again with a connection, or add .fit files directly.';return}
+   const z=await JSZip.loadAsync(await f.arrayBuffer());for(const n of Object.keys(z.files)){if(/\.fit$/i.test(n)&&!z.files[n].dir)bufs.push([n,await z.files[n].async('arraybuffer')])}}
+  else if(/\.fit$/i.test(f.name))bufs.push([f.name,await f.arrayBuffer()])}}catch(e){res.textContent='Could not read one of the files.';return}
+ let added=0,added2=0,dup=0,other=0,bad=0;
+ for(const [n,b] of bufs){let ss;try{ss=parseFit(b)}catch(e){bad++;continue}
+  for(const o of ss){if(o[5]!==1&&o[2]!=null&&o[8]>0){const t=crossType(o);if(t){(await addCross(o,t))?added2++:dup++}else other++;continue}
+   if(o[5]!==1||!(o[9]>0)||!(o[8]>0)||o[2]==null){other++;continue}
+   const ts=o[2]+631065600,date=fd(new Date(ts*1000)),km=o[9]/100000,secs=o[8]/1000;
+   if(runs.some(r=>Math.abs(diff(r.date,date))<=1&&Math.abs(r.km-km)<.06&&Math.abs(r.secs-secs)<10)){dup++;continue}
+   const iso=new Date(ts*1000).toISOString(),id='r_'+iso.slice(0,10).replace(/-/g,'')+'_'+iso.slice(11,16).replace(':','');
+   const rec={date,km:Math.round(km*100)/100,climb:o[22]!=null&&o[22]<65535?o[22]:0,secs:Math.round(secs),hr:o[16]&&o[16]<255?o[16]:0,route:'',notes:'',src:'garmin'};
+   runs=[...runs,{id,...rec}];added++;await save('runs',id,rec)}}
+ renderList();
+ res.textContent=`Added ${added} run${added===1?'':'s'}${added2?' and '+added2+' gym or cross-training session'+(added2===1?'':'s'):''}. Skipped ${dup} already saved${other?', '+other+' not runs':''}${bad?', '+bad+' unreadable':''}.`;
+ if(added||added2)toast('Imported')}
+const SEEDRUNS=[{"id":"r_20250802_0906","date":"2025-08-02","km":23.04,"climb":882,"secs":12683,"hr":160,"route":"","notes":""},{"id":"r_20250831_0849","date":"2025-08-31","km":32.04,"climb":1356,"secs":16942,"hr":160,"route":"","notes":""},{"id":"r_20250906_0742","date":"2025-09-06","km":21.37,"climb":338,"secs":9601,"hr":151,"route":"","notes":""},{"id":"r_20250920_0700","date":"2025-09-20","km":62.5,"climb":1703,"secs":34463,"hr":152,"route":"","notes":""},{"id":"r_20260927_0835","date":"2026-09-27","km":21.32,"climb":168,"secs":7018,"hr":172,"route":"","notes":""},{"id":"r_20260929_1045","date":"2026-09-29","km":5.11,"climb":25,"secs":1954,"hr":143,"route":"","notes":""},{"id":"r_20261005_0541","date":"2026-10-05","km":7.71,"climb":38,"secs":2841,"hr":154,"route":"","notes":""},{"id":"r_20261008_0553","date":"2026-10-08","km":7.53,"climb":36,"secs":2630,"hr":162,"route":"","notes":""},{"id":"r_20261012_0558","date":"2026-10-12","km":5.65,"climb":29,"secs":2131,"hr":145,"route":"","notes":""},{"id":"r_20261014_1056","date":"2026-10-14","km":8.4,"climb":42,"secs":3227,"hr":159,"route":"","notes":""},{"id":"r_20261016_0615","date":"2026-10-16","km":12.08,"climb":81,"secs":4389,"hr":163,"route":"","notes":""},{"id":"r_20261019_0633","date":"2026-10-19","km":5.08,"climb":21,"secs":1859,"hr":151,"route":"","notes":""},{"id":"r_20261027_0719","date":"2026-10-27","km":6.39,"climb":34,"secs":2133,"hr":189,"route":"","notes":""},{"id":"r_20261029_1147","date":"2026-10-29","km":7.24,"climb":31,"secs":2634,"hr":163,"route":"","notes":""},{"id":"r_20261031_0954","date":"2026-10-31","km":11.05,"climb":172,"secs":4391,"hr":166,"route":"","notes":""},{"id":"r_20261102_0711","date":"2026-11-02","km":5.05,"climb":28,"secs":1861,"hr":154,"route":"","notes":""},{"id":"r_20261104_1203","date":"2026-11-04","km":7.04,"climb":42,"secs":2375,"hr":166,"route":"","notes":""},{"id":"r_20261106_0649","date":"2026-11-06","km":8.35,"climb":56,"secs":3109,"hr":156,"route":"","notes":""},{"id":"r_20261110_0710","date":"2026-11-10","km":10.19,"climb":243,"secs":3836,"hr":162,"route":"","notes":""},{"id":"r_20261112_1147","date":"2026-11-12","km":8.06,"climb":44,"secs":3011,"hr":159,"route":"","notes":""},{"id":"r_20261115_0905","date":"2026-11-15","km":12.07,"climb":177,"secs":4829,"hr":162,"route":"","notes":""},{"id":"r_20261116_1200","date":"2026-11-16","km":6.07,"climb":29,"secs":2419,"hr":148,"route":"","notes":""},{"id":"r_20261118_1138","date":"2026-11-18","km":6.69,"climb":154,"secs":2428,"hr":161,"route":"","notes":""},{"id":"r_20261120_1134","date":"2026-11-20","km":10.24,"climb":165,"secs":3799,"hr":160,"route":"","notes":""},{"id":"r_20261122_1010","date":"2026-11-22","km":16.69,"climb":264,"secs":6442,"hr":161,"route":"","notes":""}];
+function persistLocal(){try{localStorage.setItem('et_data',JSON.stringify({runs,gym,state}))}catch(_){}}
+function loadLocal(){try{const d=JSON.parse(localStorage.getItem('et_data')||'null');if(d){runs=d.runs||[];gym=d.gym||[];state=d.state||{};return}}catch(_){}runs=SEEDRUNS.slice()}
+function strongFill(){
+ const txt=$('#g-paste').value,L=txt.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
+ if(!L.length)return toast('Paste a workout first');
+ const MO=['january','february','march','april','may','june','july','august','september','october','november','december'];
+ let date='';for(const l of L){const m=/(\d{1,2})\s+([A-Za-z]+)\s+(\d{4})/.exec(l);if(m&&MO.indexOf(m[2].toLowerCase())>=0){date=m[3]+'-'+String(MO.indexOf(m[2].toLowerCase())+1).padStart(2,'0')+'-'+m[1].padStart(2,'0');break}}
+ const ex=[];let cur=null,vol=0;
+ L.forEach((l,i)=>{if(/^https?:/i.test(l)||i===0||/\d{4}\s+at\s/.test(l))return;
+  const s=/^Set\s*\d+:\s*([\d.]+)\s*(kg|lbs?)?\s*[×x]\s*(\d+)/i.exec(l);
+  if(s){if(!cur)return;cur.sets++;const w=+s[1]*(/lb/i.test(s[2]||'')?.4536:1);vol+=w*(+s[3])}
+  else if(!cur||cur.sets>0){cur={n:l,sets:0};ex.push(cur)}});
+ const names=ex.map(e=>e.n).join(' ').toLowerCase();
+ const leg=/squat|deadlift|leg|calf|lunge|hip thrust|glute/.test(names),up=/\b(bench|press|rows?|pull|pulldown|curls?|dips?|chin[- ]?ups?|flys?|lat)\b/.test(names);
+ const type=leg&&up?'Full body':leg?'Legs':up?'Upper body':'Full body';
+ if(date)$('#g-date').value=date;$('#g-type').value=type;
+ $('#g-notes').value=ex.map(e=>e.n.replace(/\s*\(.*?\)/,'')+' x'+e.sets).join(', ')+(vol?' | '+Math.round(vol).toLocaleString('en-GB')+' kg total':'');
+ window._link=null;window._lhr=0;
+ const gl=gym.find(x=>x.date===(date||$('#g-date').value)&&x.type==='Strength (Garmin)');
+ if(gl){window._link=gl.id;window._lhr=gl.hr||0;$('#g-min').value=gl.mins;$('#g-rpe').value=gl.rpe;$('#rpev').textContent=gl.rpe}
+ toast(gl?'Filled in, with time and heart rate from your Garmin session.':date?'Filled in. Add minutes and effort, then save.':'Filled in, but no date found');}
+async function save(c,id,data){
+ if(!db){if(c==='state')state={...state,...data};persistLocal();return}try{await db.collection(c).doc(id).set(data)}catch(err){toast('Could not save: '+(err&&err.code||'error'))}}
+async function doSave(){
+ if(logMode==='run'){
+  const date=$('#f-date').value,km=parseFloat($('#f-km').value),cl=parseFloat($('#f-cl').value)||0,
+   secs=(+$('#f-h').value||0)*3600+(+$('#f-m').value||0)*60+(+$('#f-s').value||0),hr=parseFloat($('#f-hr').value)||0;
+  if(!date||!(km>0)||!(secs>0))return toast('Add a date, distance and time');
+  const id='r_'+date.replace(/-/g,'')+'_'+Date.now().toString(36);
+  const rec={date,km,climb:cl,secs,hr,route:$('#f-route').value,notes:$('#f-notes').value.trim(),src:'app'};
+  runs=[...runs,{id,...rec}];toast('Run saved');['f-km','f-cl','f-h','f-m','f-s','f-hr','f-notes'].forEach(i=>$('#'+i).value='');renderList();await save('runs',id,rec)}
+ else{
+  const date=$('#g-date').value,mins=parseFloat($('#g-min').value);
+  if(!date||!(mins>0))return toast('Add a date and minutes');
+  const id='g_'+date.replace(/-/g,'')+'_'+Date.now().toString(36);
+  const rec={date,type:$('#g-type').value,mins,rpe:+$('#g-rpe').value,notes:$('#g-notes').value.trim()};
+  if(window._link){const lid=window._link;rec.hr=window._lhr||0;rec.src='strong+garmin';gym=gym.filter(x=>x.id!==lid);try{if(db)await db.collection('gym').doc(lid).delete()}catch(_){}window._link=null}
+  gym=[...gym,{id,...rec}];toast('Gym session saved');$('#g-min').value='';$('#g-notes').value='';renderList();await save('gym',id,rec)}}
+
+/* ---------- db ---------- */
+async function init(){
+ render();
+ let d=null;try{d=await claude.use('db')}catch(_){}
+ if(!d){loadLocal();render();return}
+ db=d;let loadT=setTimeout(()=>{$('#banner').innerHTML='<div class="note">Cannot reach your saved data yet. What you see may be out of date.</div>'},10000);
+ const clear=()=>{clearTimeout(loadT);$('#banner').innerHTML=''};
+ const subErr=e=>{clearTimeout(loadT);if(e&&e.code!=='unavailable')$('#banner').innerHTML='<div class="note">Saved data could not be loaded ('+esc(e.code)+').</div>'};
+ const num=(x,k)=>+x[k]||0;
+ db.collection('runs').onSnapshot(s=>{runs=s.docs.map(x=>{const v=x.data();return{id:x.id,date:v.date,km:num(v,'km'),climb:num(v,'climb'),secs:num(v,'secs'),hr:num(v,'hr'),route:v.route||'',notes:v.notes||''}}).filter(r=>r.date);if(!s.metadata.fromCache)clear();render()},subErr);
+ db.collection('gym').onSnapshot(s=>{gym=s.docs.map(x=>{const v=x.data();return{id:x.id,date:v.date,type:v.type||'Gym',mins:num(v,'mins'),rpe:num(v,'rpe')||6,notes:v.notes||'',hr:num(v,'hr'),src:v.src||''}}).filter(g=>g.date);render()},subErr);
+ db.doc('state/settings').onSnapshot(s=>{state=s.exists?s.data():{};render()},subErr)}
+init();
+</script>
+
+<script>if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))</script></body></html>
